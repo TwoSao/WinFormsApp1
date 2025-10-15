@@ -12,32 +12,37 @@ namespace WinFormsApp1
         private string[] imageFiles;
         private int currentImageIndex = 0;
         private bool isDarkTheme = false;
-        private string[] images = new string[]
-        {
-            "C:\\Users\\illya\\RiderProjects\\WinFormsApp1\\WinFormsApp1\\images\\1.jpg",
-            "C:\\Users\\illya\\RiderProjects\\WinFormsApp1\\WinFormsApp1\\images\\2.png",
-            "C:\\Users\\illya\\RiderProjects\\WinFormsApp1\\WinFormsApp1\\images\\3.png"
-        };
+        private string[] images;
+        private string[] lang;
+
+        string imagesPath = Path.Combine(Application.StartupPath, "..", "..", "..", "images");
+        
         public Form1()
         {
             InitializeComponent();
+            imagesPath = Path.GetFullPath(imagesPath);
+            lang = new string[3] { "RU", "EST", "ENG" };
+
+            images = new string[]
+            {
+                Path.Combine(imagesPath, "1.jpg"),
+                Path.Combine(imagesPath, "2.png"),
+                Path.Combine(imagesPath, "3.png")
+            };
         }
 
         // Change image on double click
         private void pictureBox1_DoubleClick(object sender, EventArgs e)
         {
-            if (imageFiles.Length == 0) return;
-
             if (checkBox4.Checked)
-                currentImageIndex = random.Next(imageFiles.Length);
-            else
-                currentImageIndex = (currentImageIndex + 1) % imageFiles.Length;
-
-            pictureBox1.Image?.Dispose();
-            pictureBox1.Image = Image.FromFile(imageFiles[currentImageIndex]);
+            {
+                int index = random.Next(images.Length);
+                pictureBox1.Image = Image.FromFile(images[index]);
+                pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            }
+            
         }
 
-        // "Always on top"
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             TopMost = checkBox1.Checked;
@@ -145,16 +150,69 @@ namespace WinFormsApp1
                 tabControl1.TabPages.RemoveAt(tabControl1.TabPages.Count - 1);
             }
         }
+private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+{
+    if (listBox1.SelectedIndex < 0) return; 
 
-        // Change background when selecting color
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            Color[] colors = { Color.LightBlue, Color.LightGreen, Color.LightPink, Color.LightYellow, Color.LightCoral };
-            if (listBox1.SelectedIndex >= 0 && listBox1.SelectedIndex < colors.Length)
-            {
-                BackColor = colors[listBox1.SelectedIndex];
-            }
-        }
+    string selectedLang = lang[listBox1.SelectedIndex];
+
+    switch (selectedLang)
+    {
+        case "ENG":
+            button1.Text = "Open Dialog";
+            button2.Text = "Add Tab";
+            button3.Text = "Remove Tab";
+            buttonShowPicture.Text = "Show Picture";
+            label1.Text = "Welcome";
+            label2.Text = "Select an option:";
+            checkBox1.Text = "Always on Top";
+            checkBox2.Text = "Show Picture";
+            checkBox3.Text = "Fullscreen";
+            checkBox4.Text = "Random Image";
+            break;
+
+        case "RU":
+            button1.Text = "Открыть диалог";
+            button2.Text = "Добавить вкладку";
+            button3.Text = "Удалить вкладку";
+            buttonShowPicture.Text = "Показать картинку";
+            label1.Text = "Добро пожаловать";
+            label2.Text = "Выберите опцию:";
+            checkBox1.Text = "Всегда сверху";
+            checkBox2.Text = "Показать картинку";
+            checkBox3.Text = "Полноэкранный режим";
+            checkBox4.Text = "Случайная картинка";
+            break;
+
+        case "EST":
+            button1.Text = "Ava dialoog";
+            button2.Text = "Lisa vaheleht";
+            button3.Text = "Eemalda vaheleht";
+            buttonShowPicture.Text = "Näita pilti";
+            label1.Text = "Tere tulemast";
+            label2.Text = "Vali valik:";
+            checkBox1.Text = "Alati ees";
+            checkBox2.Text = "Näita pilti";
+            checkBox3.Text = "Täisekraan";
+            checkBox4.Text = "Juhuslik pilt";
+            break;
+
+        default:
+            button1.Text = "";
+            button2.Text = "";
+            button3.Text = "";
+            buttonShowPicture.Text = "";
+            label1.Text = "";
+            label2.Text = "";
+            checkBox1.Text = "";
+            checkBox2.Text = "";
+            checkBox3.Text = "";
+            checkBox4.Text = "";
+            break;
+    }
+}
+
+
 
         private void avaMärkmedToolStripMenuItem_Click(object sender, EventArgs e)
         {
